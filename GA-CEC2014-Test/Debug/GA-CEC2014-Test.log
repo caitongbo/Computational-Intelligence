@@ -1,0 +1,22 @@
+﻿  cec14_test_func.cpp
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(762,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(801,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(842,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(885,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(927,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\cec14_test_func.cpp(972,17): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+  main.cpp
+  Unknown compiler version - please run the configure tests and report the results
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\main.cpp(81,33): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\main.cpp(111,38): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\GA-CEC2014-Test\main.cpp(552,17): warning C4326: “main”的返回类型应为“int”而非“void”
+  正在生成代码...
+  GA-CEC2014-Test.vcxproj -> C:\Users\SAMSUNG\source\repos\GA-CEC2014-Test\Debug\GA-CEC2014-Test.exe

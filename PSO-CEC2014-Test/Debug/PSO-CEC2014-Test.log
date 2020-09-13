@@ -1,0 +1,19 @@
+﻿  main.cpp
+  Unknown compiler version - please run the configure tests and report the results
+C:\Users\Administrator\Source\Repos\PSO-CEC2014-Test\PSO-CEC2014-Test\main.cpp(59,38): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\Administrator\Source\Repos\PSO-CEC2014-Test\PSO-CEC2014-Test\main.cpp(73,38): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\Administrator\Source\Repos\PSO-CEC2014-Test\PSO-CEC2014-Test\main.cpp(87,38): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\Administrator\Source\Repos\PSO-CEC2014-Test\PSO-CEC2014-Test\main.cpp(228,25): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+  PSO-CEC2014-Test.vcxproj -> C:\Users\Administrator\Source\Repos\PSO-CEC2014-Test\Debug\PSO-CEC2014-Test.exe

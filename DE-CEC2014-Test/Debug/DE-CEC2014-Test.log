@@ -1,0 +1,18 @@
+﻿  main.cpp
+  Unknown compiler version - please run the configure tests and report the results
+C:\Users\Administrator\Source\Repos\DE-CEC2014-Test\DE-CEC2014-Test\main.cpp(68,35): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\Administrator\Source\Repos\DE-CEC2014-Test\DE-CEC2014-Test\main.cpp(82,35): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+C:\Users\Administrator\Source\Repos\DE-CEC2014-Test\DE-CEC2014-Test\main.cpp(96,35): warning C4244: “参数”: 从“time_t”转换到“const UIntType”，可能丢失数据
+          with
+          [
+              UIntType=uint32_t
+          ]
+  DE-CEC2014-Test.vcxproj -> C:\Users\Administrator\Source\Repos\DE-CEC2014-Test\Debug\DE-CEC2014-Test.exe
