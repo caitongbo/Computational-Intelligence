@@ -8,27 +8,28 @@
 #include<time.h>
 #include <boost/random.hpp>
 
-#define c1 2 //加速度因子一般是根据大量实验所得
+#define c1 2 //加速度因子
 #define c2 2
-#define maxgen 500  // 迭代次数
-#define sizepop 50 // 种群规模
-#define popmax 100 // 个体最大取值
-#define popmin -100 // 个体最小取值
+#define MAXGENS 500  // 迭代次数
+#define POPSIZE 50 // 种群规模
+#define ubound 100 // 个体最大取值
+#define lbound -100 // 个体最小取值
 #define Vmax 1 // 速度最大值
 #define Vmin -1 //速度最小值
-#define dim 10 // 粒子的维数
+#define NVARS 10 // 粒子的维数
 #define PI 3.1415926 //圆周率
 
-double pop[sizepop][dim]; // 定义种群数组
-double V[sizepop][dim]; // 定义种群速度数组
-double fitness[sizepop]; // 定义种群的适应度数组
-double result[maxgen];  //定义存放每次迭代种群最优值的数组
-double pbest[sizepop][dim];  // 个体极值的位置
-double gbest[dim]; //群体极值的位置
-double fitnesspbest[sizepop]; //个体极值适应度的值
+double pop[POPSIZE][NVARS]; // 定义种群数组
+double V[POPSIZE][NVARS]; // 定义种群速度数组
+double fitness[POPSIZE]; // 定义种群的适应度数组
+double result[MAXGENS];  //定义存放每次迭代种群最优值的数组
+double pbest[POPSIZE][NVARS];  // 个体极值的位置
+double gbest[NVARS]; //群体极值的位置
+double fitnesspbest[POPSIZE]; //个体极值适应度的值
 double fitnessgbest; // 群体极值适应度值
-double genbest[maxgen][dim]; //每一代最优值取值粒子
+double genbest[MAXGENS][NVARS]; //每一代最优值取值粒子
 double* f; //返回cec计算结果
+FILE* txtFile;
 
 double* OShift, * M, * y, * z, * x_bound;   //CEC2014外部定义
 int ini_flag = 0, n_flag, func_flag, * SS;  //CEC2014外部定义
@@ -43,7 +44,7 @@ double func(double* arr)
 {
     double *x = arr; //x数组
 
-    cec14_test_func(x, f, dim, sizepop, func_num); //调用CEC2014测试集函数
+    cec14_test_func(x, f, NVARS, POPSIZE, func_num); //调用CEC2014测试集函数
 
     double fitness = f[0];
 
@@ -86,29 +87,26 @@ double randval_v()
 
     boost::mt19937 generator(time(0) * rand());
     boost::uniform_real<> uniform_real_generate_x(-1, 1);
-    boost::variate_generator< boost::mt19937&, boost::uniform_real<> > random_real_num_v(generator, uniform_real_generate_x);
+    boost::variate_generator< boost::mt19937&, boost::uniform_real<> > random_real_num_x(generator, uniform_real_generate_x);
 
-    val = random_real_num_v();
+    val = random_real_num_x();
 
     return(val);
 }
 // 种群初始化
 void pop_init(void)
 {
-    f = (double*)malloc(sizeof(double) * sizepop);
+    f = (double*)malloc(sizeof(double) * POPSIZE);
 
-    for (int i = 0;i < sizepop;i++)	//sizepop 种群规模
+    for (int i = 0;i < POPSIZE;i++)	//POPSIZE 种群规模
     {
-        for (int j = 0;j < dim;j++)//dim 粒子的维数
+        for (int j = 0;j < NVARS;j++)//NVARS 粒子的维数
         {
             pop[i][j] = randval_pop(); //-100到100之间的随机数   //pop[i][j]  种群数组
             V[i][j] = randval_v(); //-1到1之间             // V[i][j] 种群速度数组
         }
         fitness[i] = func(pop[i]); //计算适应度函数值
 
-        //printf("/n/nfitness = %f\n",fitness[i]);
-
-        //exit(1);s
     }
 }
 // max()函数定义
@@ -135,23 +133,34 @@ void PSO_func(void)
 {
     pop_init();
     double* best_fit_index; // 用于存放群体极值和其位置(序号)
-    best_fit_index = max(fitness, sizepop); //求群体极值
+    best_fit_index = max(fitness, POPSIZE); //求群体极值
     int index = (int)(*best_fit_index);
+
+    char result_file[100];
+
+    //结果txt文件输出操作
+    sprintf(result_file, "result/Result_F%d_P%d.txt", func_num, POPSIZE);
+    if ((txtFile = fopen(result_file, "w")) == NULL)
+    {
+        printf("文件打开失败！");
+        exit(1);
+    }
+
     // 群体极值位置
-    for (int i = 0;i < dim;i++)
+    for (int i = 0;i < NVARS;i++)
     {
         gbest[i] = pop[index][i];
     }
     // 个体极值位置
-    for (int i = 0;i < sizepop;i++)
+    for (int i = 0;i < POPSIZE;i++)
     {
-        for (int j = 0;j < dim;j++)
+        for (int j = 0;j < NVARS;j++)
         {
             pbest[i][j] = pop[i][j];
         }
     }
     // 个体极值适应度值
-    for (int i = 0;i < sizepop;i++)
+    for (int i = 0;i < POPSIZE;i++)
     {
         fitnesspbest[i] = fitness[i];
     }
@@ -160,12 +169,13 @@ void PSO_func(void)
     fitnessgbest = bestfitness;
 
     //迭代寻优
-    for (int i = 0;i < maxgen;i++)
+    for (int i = 0;i < MAXGENS;i++)
     {
-        for (int j = 0;j < sizepop;j++)
+
+        for (int j = 0;j < POPSIZE;j++)
         {
             //速度更新及粒子更新
-            for (int k = 0;k < dim;k++)
+            for (int k = 0;k < NVARS;k++)
             {
                 // 速度更新
                 double rand1 = randval_x(); //0到1之间的随机数
@@ -177,19 +187,19 @@ void PSO_func(void)
                     V[j][k] = Vmin;
                 // 粒子更新
                 pop[j][k] = pop[j][k] + V[j][k];
-                if (pop[j][k] > popmax)
-                    pop[j][k] = popmax;
-                if (pop[j][k] < popmin)
-                    pop[j][k] = popmin;
+                if (pop[j][k] > ubound)
+                    pop[j][k] = ubound;
+                if (pop[j][k] < lbound)
+                    pop[j][k] = lbound;
             }
             fitness[j] = func(pop[j]); //新粒子的适应度值
         }
-        for (int j = 0;j < sizepop;j++)
+        for (int j = 0;j < POPSIZE;j++)
         {
             // 个体极值更新
             if (fitness[j] > fitnesspbest[j])
             {
-                for (int k = 0;k < dim;k++)
+                for (int k = 0;k < NVARS;k++)
                 {
                     pbest[j][k] = pop[j][k];
                 }
@@ -198,21 +208,26 @@ void PSO_func(void)
             // 群体极值更新
             if (fitness[j] > fitnessgbest)
             {
-                for (int k = 0;k < dim;k++)
+                for (int k = 0;k < NVARS;k++)
                     gbest[k] = pop[j][k];
                 fitnessgbest = fitness[j];
             }
         }
-        for (int k = 0;k < dim;k++)
+        for (int k = 0;k < NVARS;k++)
         {
             genbest[i][k] = gbest[k]; // 每一代最优值取值粒子位置记录
         }
         result[i] = fitnessgbest; // 每代的最优值记录到数组
+
+        printf("\n F%d\t第%d代\t%E", func_num, i + 1, result[i]);
+        fprintf(txtFile,"\n F%d\t第%d代\t%E", func_num,i + 1, result[i]);
     }
 }
 
 //功能函数
-void start_Function(int n) {
+void start_Function(int n) 
+{
+    char result_file[100];
 
     func_num = n;
     
@@ -220,19 +235,26 @@ void start_Function(int n) {
 
     clock_t start, finish; //程序开始和结束时间
     start = clock(); //开始计时
-    srand((unsigned)time(NULL)); // 初始化随机数种子
+
     PSO_func();
 
     double* best_arr;
-    best_arr = max(result, maxgen);   //result  存放每次迭代种群最优值的数组   //maxgen 迭代次数
+    best_arr = max(result, MAXGENS);   //result  存放每次迭代种群最优值的数组   //MAXGENS 迭代次数
     int best_gen_number = *best_arr; // 最优值所处的代数
     double best = *(best_arr + 1); //最优值
 
-    printf("迭代了%d次，在第%d次取到最优值，最优值为:%lf.\n", maxgen, best_gen_number + 1, best);
+    printf("\n\n迭代了%d次，在第%d次取到最优值，最优值为:%lf.\n", MAXGENS, best_gen_number + 1, best);
+    fprintf(txtFile,"\n\n迭代了%d次，在第%d次取到最优值，最优值为:%lf.\n", MAXGENS, best_gen_number + 1, best);
+
     printf("取到最优值的位置为(%lf,%lf).\n", genbest[best_gen_number][0], genbest[best_gen_number][1]);
+    fprintf(txtFile,"取到最优值的位置为(%lf,%lf).\n", genbest[best_gen_number][0], genbest[best_gen_number][1]);
+
     finish = clock(); //结束时间
     double duration = (double)(finish - start) / CLOCKS_PER_SEC; // 程序运行时间
     printf("程序运行耗时:%lf\n", duration);
+    fprintf(txtFile,"程序运行耗时:%lf\n", duration);
+
+    fclose(txtFile);
     printf("F%d计算完成。\n", func_num);
 
 
